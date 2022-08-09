@@ -1,0 +1,47 @@
+Find the 3-month rolling average of total revenue from purchases given a table with users, their purchase amount, and date purchased. 
+Do not include returns which are represented by negative purchase values. Output the year-month (YYYY-MM) and 3-month rolling average of revenue, 
+sorted from earliest month to latest month.
+A 3-month rolling average is defined by calculating the average total revenue from all user purchases for the current month and previous two months. 
+The first two months will not be a true 3-month rolling average since we are not given data from last year. 
+Assume each month has at least one purchase.
+
+Table: amazon_purchases
+
+user_id:
+int
+created_at:
+datetime
+purchase_amt:
+int
+
+
+
+with base as (
+select 
+cast(extract(year from created_at) as varchar(4))
+||
+'-'
+||
+case 
+when length(cast(extract(month from created_at ) as varchar(2) ) )=1 
+then '0'|| cast(extract(month from created_at ) as varchar(2))
+else cast(extract(month from created_at ) as varchar(2) )  end
+as year_month,
+sum(purchase_amt) as purchase
+from amazon_purchases
+group by 1
+having sum(purchase_amt) >0
+order by 1 asc
+),
+ref as (
+select *,
+lag(purchase,1) over (ORDER BY year_month) as last_month_purchase,
+lag(purchase,2) over (ORDER BY year_month) as bfr_last_month_purchase
+from base
+--group by 1,2 
+)
+select year_month,
+(coalesce(purchase,0) + coalesce(last_month_purchase,0) + coalesce(bfr_last_month_purchase,0)) as three_months_rolling_revenue
+from ref
+group by 1,2
+order by 1
