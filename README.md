@@ -1,6 +1,6 @@
 - 👋 Hi, I’m @bishnupanda2020
 - 👀 I’m interested in analytics, data science and coding
-- 🌱 I’m currently learning story telling with data and direct impact to strategy
+- 🌱 I’m currently mastering story telling with data and enabling business with data driven decision
 - 💞️ I’m looking to collaborate on above mentioned topics
 - 📫 How to reach me pandabishnu.1988@gmail.com
 
